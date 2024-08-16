@@ -1,10 +1,36 @@
 const result = document.getElementById("result");
-
+let page = 1;
 async function usersFn() {
-  const response = await fetch("https://jsonplaceholder.typicode.com/users");
-  const users = await response.json();
-  displayUsers(users);
+  try {
+    const response = await fetch(
+      `https://jsonplaceholder.typicode.com/users?_page=${page}&_limit=5`
+    );
+    const users = await response.json();
+    displayUsers(users);
+  } catch (error) {
+    console.log(error);
+  }
 }
+document.addEventListener("DOMContentLoaded", function () {
+  
+});
+
+
+
+function toggleNext(func) {
+  document.getElementById("prev").addEventListener("click", function () {
+    if (page !== 1) {
+      page--;
+      func()
+    }
+  });
+  document.getElementById("next").addEventListener("click", function () {
+    page++;
+    func()
+  });
+}
+
+
 
 function displayUsers(users) {
   result.innerHTML = "";
@@ -12,6 +38,7 @@ function displayUsers(users) {
   table.classList.add("table", "table-hover", "table-bordered");
   let thead = document.createElement("thead");
   let tbody = document.createElement("tbody");
+  toggleNext(usersFn)
   users.forEach((element, index) => {
     thead.innerHTML = `
     <tr class=" table table-active">
@@ -47,9 +74,15 @@ function displayUsers(users) {
 }
 
 async function todosFn() {
-  const response = await fetch("https://jsonplaceholder.typicode.com/todos");
-  const todos = await response.json();
-  displayTodos(todos);
+  try {
+    const response = await fetch(
+      `https://jsonplaceholder.typicode.com/todos?_page=${page}&_limit=10`
+    );
+    const todos = await response.json();
+    displayTodos(todos);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 function displayTodos(todos) {
@@ -57,6 +90,8 @@ function displayTodos(todos) {
   let table = document.createElement("table");
   let thead = document.createElement("thead");
   let tbody = document.createElement("tbody");
+  toggleNext(todosFn)
+
   todos.forEach((element, index) => {
     let tr = document.createElement("tr");
     tr.innerHTML = `
@@ -128,9 +163,15 @@ function displayTodos(todos) {
 }
 
 async function photosFn() {
-  const response = await fetch("https://jsonplaceholder.typicode.com/photos");
-  const photos = await response.json();
-  displayPhotos(photos);
+  try {
+    const response = await fetch(
+      `https://jsonplaceholder.typicode.com/photos?_page=${page}&_limit=10`
+    );
+    const photos = await response.json();
+    displayPhotos(photos);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 // function displayPhotos(photos) {
@@ -139,7 +180,7 @@ async function photosFn() {
 
 //   for (let i = 0; i < 100; i++) {
 //     console.log(photos[i]);
-    
+
 //     let div = document.createElement("div");
 //     div.style.width = "400px"
 //     div.innerHTML += `
@@ -152,10 +193,11 @@ async function photosFn() {
 //   result.appendChild(nums);
 // }
 function displayPhotos(photos) {
-    result.innerHTML = "";
-  
-    const style = document.createElement("style");
-    style.innerHTML = `
+  result.innerHTML = "";
+  toggleNext(photosFn)
+
+  const style = document.createElement("style");
+  style.innerHTML = `
       body {
         font-family: 'Arial', sans-serif; /* Clean sans-serif font */
         background-color: #f4f4f4; /* Light background */
@@ -200,41 +242,39 @@ function displayPhotos(photos) {
         color: #333; /* Darker color for title */
       }
     `;
-    document.head.appendChild(style); 
-  
-    let cardContainer = document.createElement("div");
-    cardContainer.className = "card-container"; 
-  
-    for (let i = 0; i < 100; i++) {
-      let card = document.createElement("div");
-      card.className = "photo-card"; 
-  
-      card.innerHTML = `
-        <img src="${photos[i].url}" alt="${photos[i].title}" class="photo-img">
-        <h4 class="photo-title">${photos[i].title}</h4>
+  document.head.appendChild(style);
+
+  let cardContainer = document.createElement("div");
+  cardContainer.className = "card-container";
+  photos.forEach((item) => {
+    let card = document.createElement("div");
+    card.className = "photo-card";
+
+    card.innerHTML = `
+        <img src="${item.url}" alt="${item.title}" class="photo-img">
+        <h4 class="photo-title">${item.title}</h4>
       `;
-  
-      cardContainer.appendChild(card);
-    }
-  
-    result.appendChild(cardContainer); 
-    console.log(cardContainer); 
-  }
-  
 
+    cardContainer.appendChild(card);
+  });
 
-
-
-
-
+  result.appendChild(cardContainer);
+  console.log(cardContainer);
+}
 
 async function albomFn() {
-  const response = await fetch("https://jsonplaceholder.typicode.com/albums");
-  const todos = await response.json();
-  displayAlbom(todos);
+  try{
+    const response = await fetch(`https://jsonplaceholder.typicode.com/albums?_page=${page}&_limit=10`);
+    const todos = await response.json();
+    displayAlbom(todos);
+  }catch(error){
+    console.log(error);
+    
+  }
 }
 function displayAlbom(albom) {
   result.innerHTML = "";
+  toggleNext(albomFn)
 
   let ul = document.createElement("ul");
   ul.style.listStyle = "none";
@@ -250,14 +290,19 @@ function displayAlbom(albom) {
   result.appendChild(ul);
 }
 async function commentFn() {
-  const response = await fetch("https://jsonplaceholder.typicode.com/comments");
-  const todos = await response.json();
-  displayComment(todos);
+  try{
+    const response = await fetch(`https://jsonplaceholder.typicode.com/comments?_page=${page}&_limit=10`);
+    const todos = await response.json();
+    displayComment(todos);
+  }catch(error){
+    console.log(error);
+    
+  }
 }
 
 function displayComment(comment) {
   result.innerHTML = "";
-
+toggleNext(commentFn)
   comment.forEach((item) => {
     let div = document.createElement("div");
     div.innerHTML = `
@@ -269,13 +314,20 @@ function displayComment(comment) {
   });
 }
 async function postsFn() {
-  const response = await fetch("https://jsonplaceholder.typicode.com/posts");
-  const todos = await response.json();
-  displayPosts(todos);
+  try{
+    const response = await fetch(`https://jsonplaceholder.typicode.com/posts?_page=${page}&_limit=10`);
+    const todos = await response.json();
+    displayPosts(todos);
+  }catch(error){
+    console.log(error);
+    
+  }
+
 }
 
 function displayPosts(posts) {
   result.innerHTML = "";
+  toggleNext(postsFn)
   posts.forEach((item) => {
     let div = document.createElement("div");
     div.classList.add("card");
